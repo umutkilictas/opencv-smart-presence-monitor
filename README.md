@@ -26,7 +26,7 @@ When the user remains absent for a predefined amount of time, the system automat
 * ✅ Real-time webcam monitoring
 * ✅ Face detection using Haar Cascade Classifier
 * ✅ User presence monitoring
-* ✅ Configurable absence timeout
+* ✅ Configurable absence timeout (via code)
 * ✅ Audible alarm notification
 * ✅ Automatic screenshot capture
 * ✅ Timestamped event logging
@@ -89,7 +89,7 @@ Continue  Alarm     Save Screenshot
 
 ## OpenCV Concepts Used
 
-This project demonstrates several fundamental OpenCV operations, including:
+This project demonstrates several fundamental OpenCV operations:
 
 * Webcam video capture
 * Real-time image processing
@@ -157,14 +157,11 @@ Press **Q** to exit the application.
 
 ---
 
-## Event Logging
-
-Example log output:
+## Example Event Log
 
 ```text
 [2026-08-05 16:45:13] APPLICATION STARTED
-[2026-08-05 16:46:02] ALARM - User Missing
-[2026-08-05 16:46:02] Screenshot Saved
+[2026-08-05 16:46:02] ALARM - User Missing | Capture: captures/alarm_2026-08-05_16-46-02.jpg
 [2026-08-05 16:46:14] USER RETURNED
 [2026-08-05 16:48:31] APPLICATION CLOSED
 ```
@@ -183,7 +180,7 @@ Example log output:
 
 ## Future Improvements
 
-* Adjustable alarm timeout
+* Adjustable alarm timeout through the user interface
 * Enable/disable alarm sound
 * FPS counter
 * MediaPipe face detection support
