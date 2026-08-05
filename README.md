@@ -192,6 +192,17 @@ Press **Q** to exit the application.
 
 ---
 
+## Acknowledgements
+
+This project uses the **Haar Cascade Frontal Face Classifier** provided by the OpenCV project.
+
+The classifier file (`haarcascade_frontalface_default.xml`) is based on the official OpenCV Haar Cascade models.
+
+Reference:
+https://github.com/opencv/opencv/tree/master/data/haarcascades
+
+---
+
 ## License
 
 This project was developed for educational and portfolio purposes.
