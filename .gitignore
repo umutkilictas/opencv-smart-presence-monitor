@@ -1,0 +1,27 @@
+# Python cache files
+__pycache__/
+*.py[cod]
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# IDE settings
+.vscode/
+.idea/
+
+# Generated captures and logs
+captures/*
+logs/*
+
+# Keep empty folders in Git
+!captures/.gitkeep
+!logs/.gitkeep
+
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# Environment variables
+.env
