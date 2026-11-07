@@ -1,163 +1,107 @@
-# OpenCV Smart Presence Monitor
+<p align="right"><b>TR</b> | <a href="README.en.md">EN</a></p>
 
-A real-time user presence monitoring application built with **Python** and **OpenCV**.
+# 👁️ OpenCV Akıllı Varlık Takip Sistemi (Smart Presence Monitor)
 
-The application continuously monitors the webcam feed, detects whether a user is present, and triggers an alarm if no face is detected for a specified period. During an alarm event, the current camera frame is automatically captured and all important events are logged with timestamps.
+<p>
+  <img src="https://img.shields.io/badge/Python-3.8+-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python"/>
+  <img src="https://img.shields.io/badge/OpenCV-Görüntü_İşleme-5C3EE8?style=flat-square&logo=opencv&logoColor=white" alt="OpenCV"/>
+  <img src="https://img.shields.io/badge/Lisans-MIT-green?style=flat-square" alt="License"/>
+</p>
 
----
+**Python** ve **OpenCV** kullanılarak geliştirilmiş gerçek zamanlı kullanıcı varlık takip uygulaması.
 
-## Project Overview
-
-This project demonstrates how classical computer vision techniques can be used to build a simple real-time presence monitoring system.
-
-Instead of identifying **who** the user is, the application only determines **whether a face is present** in the camera view.
-
-When the user remains absent for a predefined amount of time, the system automatically:
-
-* Triggers an audible alarm
-* Captures a screenshot of the current frame
-* Records the event in a log file
-* Detects when the user returns and logs the event
+Uygulama web kamerası görüntüsünü sürekli olarak izler, **Haar Cascade Yüz Sınıflandırıcısı** ile kamerada bir yüz olup olmadığını tespit eder ve belirlenen süre boyunca kullanıcı algılanmazsa otomatik olarak alarm verir. Alarm anında kamera görüntüsünü kaydeder ve tüm önemli olayları zaman damgasıyla log dosyasına yazar.
 
 ---
 
-## Features
+## 🚀 Proje Özeti
 
-* ✅ Real-time webcam monitoring
-* ✅ Face detection using Haar Cascade Classifier
-* ✅ User presence monitoring
-* ✅ Configurable absence timeout (via code)
-* ✅ Audible alarm notification
-* ✅ Automatic screenshot capture
-* ✅ Timestamped event logging
-* ✅ User return detection
-* ✅ Live alarm counter
-* ✅ Last alarm timestamp
-* ✅ Application uptime display
-* ✅ Real-time face count display
+Bu proje, klasik bilgisayarlı görü (computer vision) teknikleriyle hafif ve gerçek zamanlı bir varlık izleme sisteminin nasıl kurulabileceğini gösterir.
+
+Uygulama kullanıcının **kim olduğunu** (yüz tanıma) değil, kamera karşısında **bir yüzün bulunup bulunmadığını** (yüz tespiti) kontrol eder.
+
+Kullanıcı önceden tanımlanan süre (`ABSENCE_LIMIT = 5` saniye) boyunca kamerada görünmezse sistem otomatik olarak:
+
+* Sesli alarm verir (Windows'ta `winsound`, diğer işletim sistemlerinde terminal uyarısı)
+* O anki kamera karesini ekran görüntüsü olarak kaydeder (`captures/`)
+* Olayı zaman damgasıyla log dosyasına yazar (`logs/events.log`)
+* Kullanıcı geri döndüğünde bunu algılar ve loglar
 
 ---
 
-## How It Works
+## ✨ Özellikler
 
-```text
-Webcam
-   │
-   ▼
-Capture Frame
-   │
-   ▼
-Convert to Grayscale
-   │
-   ▼
-Histogram Equalization
-   │
-   ▼
-Face Detection
-   │
-   ▼
-Is Face Detected?
-   │
- ┌─┴──────────────┐
- │                │
-Yes              No
- │                │
- ▼                ▼
-Reset Timer    Start Timer
- │                │
- │         Timeout Reached?
- │                │
- │        ┌──────────────┐
- ▼        ▼              ▼
-Continue  Alarm     Save Screenshot
-                     Write Log
+* ✅ Gerçek zamanlı, aynalanmış web kamerası takibi
+* ✅ Histogram eşitleme (`equalizeHist`) ön işlemeli Haar Cascade yüz tespiti
+* ✅ Ayarlanabilir ayrılık geri sayım süresi (`ABSENCE_LIMIT`)
+* ✅ Süre aşımında sesli alarm bildirimi
+* ✅ Otomatik ekran görüntüsü kaydı (`captures/alarm_YYYY-MM-DD_HH-MM-SS.jpg`)
+* ✅ Zaman damgalı olay günlüğü (`APPLICATION STARTED`, `ALARM`, `USER RETURNED`, `APPLICATION CLOSED`)
+* ✅ Canlı ekran üstü bilgi paneli (HUD): durum göstergesi, algılanan yüz sayısı, toplam alarm sayacı, son alarm saati ve çalışma süresi
+
+---
+
+## 🔄 Çalışma Akışı
+
+```mermaid
+flowchart TD
+    A["Web Kamerasından Kare Al"] --> B["Gri Tonlama + Histogram Eşitleme"]
+    B --> C["Haar Cascade Yüz Tespiti"]
+    C --> D{"Yüz Algılandı mı?"}
+    D -- "Evet" --> E["Sayacı Sıfırla\nAlarmlar Sonrasıysa USER RETURNED Logla"]
+    D -- "Hayır" --> F["Ayrılık Sayacını Başlat / Güncelle"]
+    F --> G{"Süre >= ABSENCE_LIMIT (5 sn)?"}
+    G -- "Hayır" --> H["Ekranda Geri Sayım Göster"]
+    G -- "Evet" --> I["Sesli Alarm Ver\nKareyi captures/ Klasörüne Kaydet\nlogs/events.log Dosyasına Yaz"]
 ```
 
 ---
 
-## Technologies
+## 🛠️ Kullanılan Teknolojiler ve OpenCV Kavramları
 
-* Python
-* OpenCV
-* Haar Cascade Classifier
-* Windows Sound API (`winsound`)
-* File Handling
-* DateTime
-* OS Module
-
----
-
-## OpenCV Concepts Used
-
-This project demonstrates several fundamental OpenCV operations:
-
-* Webcam video capture
-* Real-time image processing
-* Face detection
-* Grayscale conversion
-* Histogram equalization
-* Rectangle drawing
-* Text rendering
-* Frame saving
-* Live video display
+* **Python 3** (`datetime`, `time`, `os`, `winsound`)
+* **OpenCV (`cv2`)**:
+  * Gerçek zamanlı video akışı (`cv2.VideoCapture`)
+  * Gri tonlama dönüşümü ve histogram eşitleme (`cv2.cvtColor`, `cv2.equalizeHist`)
+  * Çok ölçekli Haar Cascade nesne tespiti (`cv2.CascadeClassifier.detectMultiScale`)
+  * Gerçek zamanlı HUD çizimi (`cv2.rectangle`, `cv2.putText`, `cv2.getTextSize`)
+  * Olay anında görüntü kaydetme (`cv2.imwrite`)
 
 ---
 
-## Project Structure
+## 📁 Proje Yapısı
 
 ```text
 opencv-smart-presence-monitor/
-│
 ├── captures/
-│   └── .gitkeep
-│
+│   └── .gitkeep                             # Alarm anında alınan ekran görüntüleri
 ├── logs/
-│   └── .gitkeep
-│
+│   └── .gitkeep                             # Zaman damgalı events.log dosyası
 ├── .gitignore
-├── haarcascade_frontalface_default.xml
-├── main.py
-├── README.md
-└── requirements.txt
+├── haarcascade_frontalface_default.xml      # OpenCV Haar Cascade ön yüz modeli
+├── main.py                                  # Ana uygulama kodu
+├── requirements.txt
+├── LICENSE
+├── README.md                                # Türkçe dokümantasyon (varsayılan)
+└── README.en.md                             # İngilizce dokümantasyon
 ```
 
 ---
 
-## Installation
-
-Clone the repository:
+## ⚙️ Kurulum ve Kullanım
 
 ```bash
 git clone https://github.com/umutkilictas/opencv-smart-presence-monitor.git
-```
-
-Navigate to the project directory:
-
-```bash
 cd opencv-smart-presence-monitor
-```
-
-Install the required dependency:
-
-```bash
 pip install -r requirements.txt
-```
-
----
-
-## Usage
-
-Run the application:
-
-```bash
 python main.py
 ```
 
-Press **Q** to exit the application.
+Uygulamadan güvenli şekilde çıkmak için kamera penceresi aktifken **`Q`** tuşuna basın.
 
 ---
 
-## Example Event Log
+## 📋 Örnek Olay Günlüğü (`logs/events.log`)
 
 ```text
 [2026-08-05 16:45:13] APPLICATION STARTED
@@ -168,41 +112,14 @@ Press **Q** to exit the application.
 
 ---
 
-## Current Limitations
+## ⚠️ Mevcut Kısıtlamalar
 
-* The application performs **face detection**, not face recognition.
-* It cannot identify specific individuals.
-* Detection accuracy depends on lighting conditions.
-* Haar Cascade performs best with frontal faces.
-* Alarm sound currently uses the Windows-specific `winsound` module.
+* Uygulama kimlik doğrulaması (yüz tanıma) değil, **yüz varlık tespiti** yapar.
+* Tespit başarımı ortam ışığına ve yüzün kameraya dönük olmasına bağlıdır.
 
 ---
 
-## Future Improvements
+## 🙏 Teşekkür ve Lisans
 
-* Adjustable alarm timeout through the user interface
-* Enable/disable alarm sound
-* FPS counter
-* MediaPipe face detection support
-* Cross-platform alarm system
-* Email notifications
-* Desktop GUI
-* Configuration file support
-* Multi-face tracking
-
----
-
-## Acknowledgements
-
-This project uses the **Haar Cascade Frontal Face Classifier** provided by the OpenCV project.
-
-The classifier file (`haarcascade_frontalface_default.xml`) is based on the official OpenCV Haar Cascade models.
-
-Reference:
-https://github.com/opencv/opencv/tree/master/data/haarcascades
-
----
-
-## License
-
-This project was developed for educational and portfolio purposes.
+Bu projede resmi [OpenCV Haar Cascade Frontal Face Classifier](https://github.com/opencv/opencv/tree/master/data/haarcascades) modeli kullanılmıştır.  
+Kaynak kodlar [MIT Lisansı](LICENSE) altında lisanslanmıştır.

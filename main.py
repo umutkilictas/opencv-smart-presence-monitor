@@ -1,6 +1,9 @@
 import os
 import time
-import winsound
+try:
+    import winsound
+except ImportError:
+    winsound = None
 from datetime import datetime
 
 import cv2
@@ -41,10 +44,10 @@ def save_alarm_capture(frame):
     is_saved = cv2.imwrite(file_path, frame)
 
     if is_saved:
-        print(f"Alarm görüntüsü kaydedildi: {file_path}")
+        print(f"Alarm capture saved: {file_path}")
         return file_path
 
-    print("Alarm görüntüsü kaydedilemedi.")
+    print("Failed to save alarm capture.")
     return None
 
 
@@ -87,12 +90,12 @@ face_cascade = cv2.CascadeClassifier(
 )
 
 if not camera.isOpened():
-    print("Kamera açılamadı.")
+    print("Failed to open camera.")
     raise SystemExit
 
 if face_cascade.empty():
     camera.release()
-    print("Haar Cascade dosyası yüklenemedi.")
+    print("Failed to load Haar Cascade classifier file.")
     raise SystemExit
 
 
@@ -114,7 +117,7 @@ try:
         success, frame = camera.read()
 
         if not success:
-            print("Kameradan görüntü alınamadı.")
+            print("Failed to read frame from camera.")
             write_log("CAMERA FRAME ERROR")
             break
 
@@ -187,10 +190,13 @@ try:
 
                     alarm_active = True
 
-                    winsound.Beep(
-                        1500,
-                        1000
-                    )
+                    if winsound is not None:
+                        winsound.Beep(
+                            1500,
+                            1000
+                        )
+                    else:
+                        print("\a[ALARM] User missing threshold exceeded!")
 
         # -------------------- FACE BOXES --------------------
 
